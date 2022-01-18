@@ -1,0 +1,36 @@
+server:
+  port: 9090
+spring:  
+  config:
+    import: classpath:myconfig.yml
+  application:
+    name: orders
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/orders
+  kafka:
+    consumer:
+      bootstrap-servers: 'localhost:9092'
+      group-id: 'group_id'
+      auto-offset-reset: 'earliest'
+      key-deserializer: 'org.apache.kafka.common.serialization.StringDeserializer'
+      value-deserializer: 'org.apache.kafka.common.serialization.StringDeserializer'
+    producer:
+      bootstrap-servers: 'localhost:9092'
+      key-serializer: 'org.apache.kafka.common.serialization.StringSerializer'
+      value-serializer: 'org.apache.kafka.common.serialization.StringSerializer'
+      acks: 'all' 
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+    topics: stock-events,fi-events,derivatives-events,fx-events,commodities-events    
+logging:
+  config: classpath:log4j2.properties 
+  file: '${java.io.tmpdir}/logs/kafka-sandbox.log'
+  pattern.console: '%d{yyyy-MM-dd HH:mm:ss} - %msg%n'
+  pattern.file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%'
+  level:
+    root: "WARN"
+    org.springframework: 'WARN'
+    com.dy: 'DEBUG'
+  register-shutdown-hook: true
